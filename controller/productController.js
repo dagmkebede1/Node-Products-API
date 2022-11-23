@@ -108,8 +108,8 @@ const getAllproducts = CatchAsync(async (req, res) => {
 });
 
 const getProduct = CatchAsync(async (req, res) => {
-  const { featured, company, name, sort, field, numericFilter } = req.query;
-  queryObject = {};
+  const { featured, company, name, sort, field, numericFilters } = req.query;
+  let queryObject = {};
   //fiter by featured
   if (featured) {
     queryObject.featured = featured === "true" ? true : false;
@@ -122,7 +122,7 @@ const getProduct = CatchAsync(async (req, res) => {
   if (name) {
     queryObject.name = { $regex: name, $options: "i" };
   }
-  if (numericFilter) {
+  if (numericFilters) {
     const operatorMap = {
       ">": "$gt",
       ">=": "$gte",
@@ -131,10 +131,11 @@ const getProduct = CatchAsync(async (req, res) => {
       "<=": "$lte",
     };
     const regEx = /\b(<|>|>=|=|<|<=)\b/g;
-    let filters = numericFilter.replace(
+    let filters = numericFilters.replace(
       regEx,
       (match) => `-${operatorMap[match]}-`
     );
+    // console.log(filters);
     const options = ["price", "rating"];
     filters = filters.split(",").forEach((item) => {
       const [field, operator, value] = item.split("-");
@@ -145,7 +146,7 @@ const getProduct = CatchAsync(async (req, res) => {
   }
   // console.log(queryObject)
   let result = products.find(queryObject);
-  //sort by alfabetical string(name, company) and nubers(price)
+  //sort by alphabetical string(name, company) and numbers(price)
   if (sort) {
     const sortlist = sort.split(",").join(" ");
     result = result.sort(sortlist);
@@ -166,7 +167,7 @@ const getProduct = CatchAsync(async (req, res) => {
 
   result = result.skip(skip).limit(limit);
 
-  console.log(queryObject);
+  // console.log(queryObject);
   const data = await result;
 
   res.status(200).json({ data, nbHits: data.length });

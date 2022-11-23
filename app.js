@@ -33,7 +33,7 @@ app.use(express.json({ limit: "10kb" }));
 app.use(mongoSanitize());
 
 //Data Sanitization against XSS attacks
-app.use(xss());
+// app.use(xss());
 
 //Prevent Parameter Pollution
 
@@ -51,7 +51,7 @@ app.use(globalErrorHanddler);
 
 const start = CatchAsync(async (uri, port) => {
   await mongoose.connect(uri);
-  console.log("Database connected Succesfully!");
+  console.log("Database connected Successfully!");
   app.listen(port, console.log(`server running on port: ${port}`));
 });
 
