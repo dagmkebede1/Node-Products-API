@@ -13,7 +13,7 @@ const CatchAsync = require("./utils/CatchAsync");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
-const port = 4000 || process.env.PORT;
+const port = 3000 || process.env.PORT;
 const app = express();
 
 //Secure the Header
