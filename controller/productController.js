@@ -50,13 +50,13 @@ const updateProduct = CatchAsync(async (req, res, next) => {
   // Updating Patient's Data by Receptionist
   if (currentUser.role === "admin") {
     const product = await products.findById({ _id: id });
-    if (name) products.name = name;
-    if (price) products.price = price;
-    if (featured) products.featured = featured;
-    if (rating) products.rating = rating;
-    if (company) products.company = company;
+    if (name) product.name = name;
+    if (price) product.price = price;
+    if (featured) product.featured = featured;
+    if (rating) product.rating = rating;
+    if (company) product.company = company;
 
-    await products.save({ runValidators: false });
+    await product.save({ runValidators: false });
 
     if (!product) {
       res.status(StatusCodes.NOT_FOUND).json({
@@ -143,7 +143,7 @@ const getProduct = CatchAsync(async (req, res) => {
       }
     });
   }
-
+  // console.log(queryObject)
   let result = products.find(queryObject);
   //sort by alfabetical string(name, company) and nubers(price)
   if (sort) {

@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const mongoose = require("mongoose");
@@ -19,6 +20,7 @@ const app = express();
 //Secure the Header
 app.use(helmet());
 app.use(cors());
+app.use(cookieParser());
 //Limit the requests from the same IP's....protections against {DDOS & brute force attacks}
 const Limiter = rateLimit({
   max: 500,

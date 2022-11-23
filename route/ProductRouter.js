@@ -12,8 +12,8 @@ const {
 Router.route("/products")
   .get(getAllproducts)
   .get(AuthController.protect, createProduct);
+Router.route("/products/search").get(getProduct);
 Router.route("/products/:id")
-  .get(getProduct)
   .patch(AuthController.protect, updateProduct)
   .delete(AuthController.protect, deleteProduct);
 
