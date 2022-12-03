@@ -21,6 +21,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(cookieParser());
+
 //Limit the requests from the same IP's....protections against {DDOS & brute force attacks}
 const Limiter = rateLimit({
   max: 500,
@@ -29,6 +30,7 @@ const Limiter = rateLimit({
 });
 app.use("/", Limiter);
 app.use(express.json({ limit: "10kb" }));
+
 //Data Sanitization against NoSQL query injections
 app.use(mongoSanitize());
 
@@ -36,7 +38,6 @@ app.use(mongoSanitize());
 // app.use(xss());
 
 //Prevent Parameter Pollution
-
 app.use(
   hpp({
     whitelist: ["name", "price", "sort", "featured", "rating", "company"],
