@@ -22,7 +22,8 @@ const createProduct = CatchAsync(async (req, res, next) => {
       "price",
       "featured",
       "rating",
-      "company"
+      "company",
+      "image"
     );
     const newProducts = new products(filteredBody);
 
@@ -45,7 +46,7 @@ const updateProduct = CatchAsync(async (req, res, next) => {
   //     "rating",
   //     "company"
   //   );
-  const { name, price, featured, rating, company } = req.body;
+  const { name, price, featured, rating, company, image } = req.body;
 
   // Updating Patient's Data by Receptionist
   if (currentUser.role === "admin") {
@@ -55,6 +56,7 @@ const updateProduct = CatchAsync(async (req, res, next) => {
     if (featured) product.featured = featured;
     if (rating) product.rating = rating;
     if (company) product.company = company;
+    if (image) product.image = image;
 
     await product.save({ runValidators: false });
 
@@ -84,7 +86,7 @@ const deleteProduct = CatchAsync(async (req, res, next) => {
     if (!deletedProduct) {
       res.status(StatusCodes.NOT_FOUND).json({
         status: "success",
-        message: `No Patient with ID : ${id}`,
+        message: `No Products with ID : ${id}`,
       });
     } else {
       res.status(StatusCodes.OK).json({
@@ -95,7 +97,7 @@ const deleteProduct = CatchAsync(async (req, res, next) => {
   } else {
     return next(
       new AppError(
-        `You Do Not Have Permission to Delete Patient`,
+        `You Do Not Have Permission to Delete Products`,
         StatusCodes.BAD_REQUEST
       )
     );
@@ -108,7 +110,7 @@ const getAllproducts = CatchAsync(async (req, res) => {
 });
 
 const getProduct = CatchAsync(async (req, res) => {
-  const { featured, company, name, sort, field, numericFilters } = req.query;
+  const { featured, company, name, sort, field, Filters } = req.query;
   let queryObject = {};
   //fiter by featured
   if (featured) {
@@ -122,7 +124,7 @@ const getProduct = CatchAsync(async (req, res) => {
   if (name) {
     queryObject.name = { $regex: name, $options: "i" };
   }
-  if (numericFilters) {
+  if (Filters) {
     const operatorMap = {
       ">": "$gt",
       ">=": "$gte",
@@ -131,10 +133,7 @@ const getProduct = CatchAsync(async (req, res) => {
       "<=": "$lte",
     };
     const regEx = /\b(<|>|>=|=|<|<=)\b/g;
-    let filters = numericFilters.replace(
-      regEx,
-      (match) => `-${operatorMap[match]}-`
-    );
+    let filters = Filters.replace(regEx, (match) => `-${operatorMap[match]}-`);
     // console.log(filters);
     const options = ["price", "rating"];
     filters = filters.split(",").forEach((item) => {
