@@ -38,17 +38,9 @@ const createProduct = CatchAsync(async (req, res, next) => {
 const updateProduct = CatchAsync(async (req, res, next) => {
   const id = req.params.id;
   const currentUser = req.user;
-  //   const filteredBody = filterObj(
-  //     req.body,
-  //     "name",
-  //     "price",
-  //     "featured",
-  //     "rating",
-  //     "company"
-  //   );
   const { name, price, featured, rating, company, image } = req.body;
 
-  // Updating Patient's Data by Receptionist
+  // Updating Products Data by Receptionist
   if (currentUser.role === "admin") {
     const product = await products.findById({ _id: id });
     if (name) product.name = name;
@@ -112,7 +104,7 @@ const getAllproducts = CatchAsync(async (req, res) => {
 const getProduct = CatchAsync(async (req, res) => {
   const { featured, company, name, sort, field, Filters } = req.query;
   let queryObject = {};
-  //fiter by featured
+  //filter by featured
   if (featured) {
     queryObject.featured = featured === "true" ? true : false;
   }
